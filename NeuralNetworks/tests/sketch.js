@@ -10,6 +10,11 @@ function setup() {
 
     let c = Matrix.multiply(a, b);
     c.print();
+
+    console.log("----------------------------------");
+    a.print();
+    let d = Matrix.transpose(a);
+    d.print();
 }
 
 function draw() {

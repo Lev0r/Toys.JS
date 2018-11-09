@@ -71,6 +71,23 @@ class Matrix {
         return result;
     }
 
+    // Возвращает новую транспонираванную матрицу.
+    static transpose (a) {
+        if(!(a instanceof Matrix)) {
+            throw "Unsupported argument type"
+        }
+
+        let result = new Matrix(a.cols, a.rows);
+        for (let i = 0; i < a.rows; i++) {
+            for (let j = 0; j < a.cols; j++) {
+                let val = a.getItem(i, j);
+                result.setItem(j, i, val);
+            }
+        }
+
+        return result;
+    }
+
     // Умножает матрицу на число (скалирование матрицы)
     multiply(n) {
         for (let i = 0; i < this.data.length; i++) {
