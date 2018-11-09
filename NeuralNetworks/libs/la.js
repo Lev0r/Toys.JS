@@ -18,6 +18,10 @@ class Matrix {
         return m;
     }
 
+    toArray() {
+        return this.data.slice();
+    }
+
     // Получить значение по координатам x, y
     getItem(x, y) {
         let index = this.getItemIndex(x, y);

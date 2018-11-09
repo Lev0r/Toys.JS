@@ -12,8 +12,10 @@ class MultiLayerPerceptron {
 
         // Создаем матрицы смещения для выходных данных
         this.output_bias = new Matrix(this.output_count, 1);
-    }
+        this.output_bias.randomize();
 
+        this.output_weights = new Matrix(this.output_count, input_count);
+    }
 
     sigmoid(x) {
         return 1 / (1 + Math.exp(-x));
@@ -48,26 +50,49 @@ class MultiLayerPerceptron {
 
         // Увеличиваем счетчик количества скрытых слоев
         this.hidden_layers_count ++;
+
+        // Пересоздаем output слой чтобы присоединить его к добавленному
+        this.output_weights = new Matrix(this.output_count, layer_lenght);
     }
 
     feedForward (input_array) {
+        // Проверка взодных параметров и конвертация в необходимый формат
         let input;
         if (input_array instanceof Matrix) {
+            if(input_array.data.length != this.input_count) {
+                throw "Input length is not equal to network input nodes count";
+            }
             input = input_array;
         }
         else if (Array.isArray(input_array)) {
+            if(input_array.length != this.input_count) {
+                throw "Input length is not equal to network input nodes count";
+            }
             input = Matrix.vectorFromArray(input_array);
         }
         else {
             throw "Unsupported argument type";
         }
 
+        // Вычисляем значения для каждого скрытого слоя
         let prev_layer = input;
         for (let i = 0; i < this.hidden_layers_count; i++) {
+            // Умножаем матрицу весов на вектор предыдущего умножения
             let hidden = Matrix.multiply(this.hidden_weights[0], prev_layer);
+            // добавляем смещение
             hidden.add(this.hidden_biases[0]);
+            // Применяем функцию активации (нормализируем значения)
             hidden.each(this.sigmoid);
+            // результат - новый вектор
             prev_layer = hidden;
         }
+
+        // Вычисляем значения для выходного слоя
+        let output = Matrix.multiply(this.output_weights, prev_layer);
+        output.add(this.output_bias);
+        output.each(this.sigmoid);
+
+        // Приводим результат к массиву
+        return output.toArray();
     }
 }
