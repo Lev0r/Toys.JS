@@ -27,7 +27,7 @@ class Matrix {
     getItemIndex(x, y) {
         if(x >= this.rows || y >= this.cols)
             throw "Index is out of rannge!";
-        return x*(this.rows-1) + y;
+        return x*this.cols + y;
     }
 
     // Печатет значения матрицы в консоль
@@ -35,11 +35,40 @@ class Matrix {
         let result = "";
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
-                result += this.data[this.getItemIndex(i,j)] + " ";
+                result += this.getItem(i, j) + " ";
             }
             result += "\n";
         }
         console.log(result);
+    }
+
+    // Заполняет матрицу случайными значениями от 0 до 10
+    randomize() {
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i] = Math.floor(Math.random() * Math.floor(10));
+        }
+    }
+
+    // Перемножает две матрицы. Возвращает новый объект Matrix
+    static multiply (a, b) {
+        if (!(a instanceof Matrix) || !(b instanceof Matrix)) {
+            throw "Unsupported argument type"
+        }
+        if (a.cols != b.rows) {
+            throw "Incorrect matrix size"
+        }
+
+        let result = new Matrix(a.rows, b.cols);
+        for (let i = 0; i < a.rows; i++) {
+            for (let j = 0; j < b.cols; j++) {
+                let sum = 0;
+                for (let k = 0; k < a.cols; k++) {
+                    sum += a.getItem(i, k) * b.getItem(k, j);
+                }
+                result.setItem(i, j, sum);
+            }
+        }
+        return result;
     }
 
     // Умножает матрицу на число (скалирование матрицы)
@@ -50,9 +79,23 @@ class Matrix {
     }
 
     // Добавляет число к матрице
+    // или складывает 2 матрицы поэлементно
     add(n) {
-        for (let i = 0; i < this.data.length; i++) {
-            this.data[i] += n;
+        if(n instanceof Matrix) {
+            if(n.data.length != this.data.length) {
+                throw "Matrix length should be the same!";
+            }
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i] += n.data[i];
+            }
+        }
+        else if (!isNaN(n)) {
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i] += n;
+            }
+        }
+        else {
+            throw "Usupported argument type";
         }
     }
 }
