@@ -10,6 +10,14 @@ class Matrix {
         }
     }
 
+    // Создает вектор из массива.
+    // Вектор будет иметь 1 колонку и столько же строк, сколько исходный массив
+    static vectorFromArray(array) {
+        let m = new Matrix(array.length, 1);
+        m.each((x, i) => array[i]);
+        return m;
+    }
+
     // Получить значение по координатам x, y
     getItem(x, y) {
         let index = this.getItemIndex(x, y);
@@ -42,10 +50,10 @@ class Matrix {
         console.log(result);
     }
 
-    // Заполняет матрицу случайными значениями от 0 до 10
+    // Заполняет матрицу случайными значениями от -1 до 1
     randomize() {
         for (let i = 0; i < this.data.length; i++) {
-            this.data[i] = Math.floor(Math.random() * Math.floor(10));
+            this.data[i] = Math.random() * 2 -1;
         }
     }
 
@@ -104,7 +112,6 @@ class Matrix {
             if(n.data.length != this.data.length) {
                 throw "Matrix length should be the same!";
             }
-            
             this.each((x, i) => x += n.data[i]);
         }
         else if (!isNaN(n)) {

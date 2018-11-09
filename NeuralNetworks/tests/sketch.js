@@ -1,14 +1,8 @@
 function setup() {
-    let a = new Matrix(5, 7);
-    let b = new Matrix(7, 5);
-
-    a.randomize();
-    b.randomize();
-
-    a.print();
-    b.print();
-    a.add(b);
-    a.print();
+    let nn = MultiLayerPerceptron.createThreeLayer(2, 2, 1);
+    let input = [1, 0];
+    let output = nn.feedForward(input);
+    console.log(output);
 }
 
 function draw() {
