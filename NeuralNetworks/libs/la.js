@@ -90,9 +90,11 @@ class Matrix {
 
     // Умножает матрицу на число (скалирование матрицы)
     multiply(n) {
-        for (let i = 0; i < this.data.length; i++) {
-            this.data[i] *= n;
+        if(isNaN(n)) {
+            throw "Usupported argument type";
         }
+
+        this.each((x) => x *= n);
     }
 
     // Добавляет число к матрице
@@ -102,17 +104,29 @@ class Matrix {
             if(n.data.length != this.data.length) {
                 throw "Matrix length should be the same!";
             }
-            for (let i = 0; i < this.data.length; i++) {
-                this.data[i] += n.data[i];
-            }
+            
+            this.each((x, i) => x += n.data[i]);
         }
         else if (!isNaN(n)) {
-            for (let i = 0; i < this.data.length; i++) {
-                this.data[i] += n;
-            }
+            this.each((x) => x += n);
         }
         else {
             throw "Usupported argument type";
         }
     }
+
+    // Применяет переданную функцию к каждому элементу матрицы
+    // Ф-ция должна принимать число и возвращать число
+    // Опционально в ф-цию передается так же индекс элемента в одномерном массиве
+    each (func) {
+        if(typeof func != 'function') {
+            throw "Usupported argument type";
+        }
+
+        for (let i = 0; i < this.data.length; i++) {
+            let val = this.data[i];
+            this.data[i] = func(val, i);
+        }
+    }
+
 }
