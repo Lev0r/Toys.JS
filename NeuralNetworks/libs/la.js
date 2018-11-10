@@ -140,4 +140,18 @@ class Matrix {
         }
     }
 
+    // Поэлементно вычитает из одной матрицы другую
+    // возвращает новую матрицу
+    static subtract (a ,b) {
+        if(!(a instanceof Matrix) || !(b instanceof Matrix)) {
+            throw "Usupported argument type";
+        }
+        else if (a.rows != b.rows || a.cols != b.cols) {
+            throw "Matrixes should have same size";
+        }
+
+        let result = new Matrix(a.rows, a.cols);
+        result.each((x, i) => a.data[i] - b.data[i]);
+        return result;
+    }
 }
